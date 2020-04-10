@@ -33,11 +33,48 @@ class VoteClassifier(ClassifierI):
         choice_votes = votes.count(mode(votes))
         conf = choice_votes / len(votes)
         return conf
+    
+import codecs
+
+short_pos = codecs.open("short_reviews/positive.txt","r", encoding="latin2").read()
+short_neg = codecs.open("short_reviews/negative.txt","r", encoding="latin2").read()
+
+
+#creating empty lists
+all_words = []
+documents = []
+
+#only allowing the adjective word type
+allowed_word_types = ["J"]
+
+for p in short_pos.split('\n'):
+    documents.append( (p, "pos") )
+    words = word_tokenize(p)
+    pos = nltk.pos_tag(words)
+    for w in pos:
+        if w[1][0] in allowed_word_types:
+            all_words.append(w[0].lower())
+
+    
+for p in short_neg.split('\n'):
+    documents.append( (p, "neg") )
+    words = word_tokenize(p)
+    pos = nltk.pos_tag(words)
+    for w in pos:
+        if w[1][0] in allowed_word_types:
+            all_words.append(w[0].lower())
 
 #loading the pickled file
 documents_f = open("pickled_algos/documents.pickle", "rb")
 documents = pickle.load(documents_f)
 documents_f.close()
+
+#frequency distribution to find the most common words
+all_words = nltk.FreqDist(all_words)
+#print(all_words.most_common(15))
+
+#using top 5000 features or words (can be used any features accordingly)
+word_features = list(all_words.keys())[:5000]
 
 
 #loading the pickled file
@@ -46,10 +83,27 @@ word_features = pickle.load(word_features5k_f)
 word_features5k_f.close()
 
 
+#function to find the features in the document
+def find_features(document):
+    words = word_tokenize(document)
+    features = {}
+    for w in word_features:
+        features[w] = (w in words) #if the 5000 words in doc, it will be true else false
+
+    return features
+
+
 #loading the pickled file
 featuresets_f = open("pickled_algos/featuresets5k.pickle", "rb")
 featuresets = pickle.load(featuresets_f)
 featuresets_f.close()
+
+
+#shuffling the featuresets 
+random.shuffle(featuresets)
+
+testing_set = featuresets[10000:]
+training_set = featuresets[:10000]
 
 
 #loading the pickled classifier
@@ -95,7 +149,6 @@ voted_classifier = VoteClassifier(
                                   MNB_classifier,
                                   BernoulliNB_classifier,
                                   LogisticRegression_classifier)
-
 
 
 #function to utilize the voted classifier and predict outcomes
