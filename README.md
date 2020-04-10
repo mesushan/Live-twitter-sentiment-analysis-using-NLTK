@@ -10,4 +10,4 @@ The following steps were taken for this project:
 - Saving the tweets with confidence over 80%
 - Plotting the live sentiment analysis for specific word (in this case, word 'happy')
 
-[Project done based on the tutorials available in PythonProgramming.net]("https://pythonprogramming.net/tokenizing-words-sentences-nltk-tutorial/")
+[Project done based on the tutorials available in PythonProgramming.net](https://pythonprogramming.net/tokenizing-words-sentences-nltk-tutorial/)
