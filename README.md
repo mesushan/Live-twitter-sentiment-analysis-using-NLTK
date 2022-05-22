@@ -11,3 +11,4 @@ The following steps were taken for this project:
 - Plotting the live sentiment analysis for specific word (in this case, word 'happy')
 
 Project done based on the tutorials available in [PythonProgramming.net](https://pythonprogramming.net/tokenizing-words-sentences-nltk-tutorial/)
+**Also, try twint which is also good library for tweets analysis.**
